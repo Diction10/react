@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <title>TODO List</title>
+    <style>
+        #tasks {
+            margin-left: 25%;
+        }
+    </style>
+</head>
+<body>
+    <div id="tasks"></div>
+
+
+	<script type="text/babel">
+        function Task () {
+
+            // set the states
+            const [state, setState] = React.useState({
+                tasks: [],
+                input: '',
+            }); 
+
+            return(
+                <div>
+                   <h1> This is my TODO list </h1>
+                   <ul>
+                        {state.tasks.map((task, i) =>
+                            <li key={i}>
+                                <span> {task} </span>
+                                <span> <i data-key={i} onClick={deleteTask} className="glyphicon glyphicon-trash"></i> </span>
+                            </li>
+                        )}
+                    </ul> 
+                   <div>
+                        <input autoFocus={true} onChange={enterTask} value={state.input}/>
+                         <button disabled={state.input.length>0 ? false : true}  id='submit' onClick={addTask}> Add Task</button>
+                    </div>
+                   <div>
+                        Your total numner of task is: {state.tasks.length}
+                   </div>
+                </div>
+            ) 
+
+            // make the input field accept inputs
+            function enterTask(event) {
+                setState ({
+                    ...state,
+                    input: event.target.value,
+                })
+            }
+
+            // function to add tasks
+            function addTask() {
+                setState (state => ({ 
+                    ...state,
+                    tasks: [...state.tasks, state.input],
+                    input: '',
+                }))
+            }
+
+            // function to delete a task
+            function deleteTask(e) {
+                // copy tasks list into another list
+                var task_copy = [...state.tasks];
+
+                // get the index of the key which equates to the inex of the task in the array
+                var index = e.target.getAttribute('data-key');
+                
+                // delete task from array
+                if (index !== -1) {
+                    task_copy.splice(index, 1);
+                    setState ({
+                        ...state,
+                        tasks: task_copy
+                    })
+                }
+            }
+
+            
+        }
+		ReactDOM.render (<Task/>, document.querySelector('#tasks'));
+	</script>
+</body>
+</html>
